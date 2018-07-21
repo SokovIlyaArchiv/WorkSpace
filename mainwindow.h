@@ -1,10 +1,22 @@
 #pragma once
 #include <QMainWindow>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <string>
+#include <vector>
 
-class MainWindow : public QMainWindow {
+using namespace std;
+
+class MainWindow : public QWidget {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = nullptr);
+    void setThemesList(vector<string> themesList);
+    void updateUI();
     ~MainWindow();
+private:
+    QVBoxLayout* layout;
+    vector<QPushButton*> buttons;
+    vector<string> themesNamesList;
 };
