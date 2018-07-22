@@ -2,7 +2,6 @@
 
 #include <QObject>
 
-#include "data.h"
 #include "login.h"
 #include "mainwindow.h"
 

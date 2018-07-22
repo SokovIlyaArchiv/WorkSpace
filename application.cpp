@@ -1,7 +1,7 @@
 #include "application.h"
 
 Application::Application() :
-    data("settings.txt") {
+    data("settings.txt"), mainWindow(data) {
     login.show();
     connect(&login, &QLineEdit::textChanged, this, &Application::tryToLogin);
 }
