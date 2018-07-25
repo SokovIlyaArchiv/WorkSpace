@@ -8,6 +8,7 @@ using namespace std;
 class Data {
 public:
     Data(string settingsFileName);
+    void addTheme(Theme theme);
     bool isValid(string password) const;
     const vector<string> getThemesList(string password) const;
     Theme& getTheme(const string& name);

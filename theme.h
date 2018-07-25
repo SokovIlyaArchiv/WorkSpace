@@ -1,4 +1,4 @@
-#pragma  once
+#pragma once
 
 #include <vector>
 
@@ -12,7 +12,7 @@ public:
     string getName(string password) const;
     string getDate() const;
     vector<string> getNotesNames(string password) const;
-    bool addNote(const Note& note);
+    bool addNote(Note note);
     Note getNote(string Name) const;
 private:
     string decode(string text, string password) const;

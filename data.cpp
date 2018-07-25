@@ -16,6 +16,11 @@ Data::Data(string settingsFileName) {
     }
 }
 
+void Data::addTheme(Theme theme) {
+    themes.push_back(theme);
+    themesFileNames.push_back(theme.getName(""));
+}
+
 bool Data::isValid(string password) const {
     if(password == this->password) {
         return true;

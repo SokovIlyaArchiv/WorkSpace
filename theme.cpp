@@ -55,7 +55,7 @@ string Theme::decode(string text, string password) const {
 }
 
 
-bool Theme::addNote(const Note &note) {
+bool Theme::addNote(Note note) {
     for(auto existNote : notes) {
         if(existNote.getName("") == note.getName("")) {
             return false;
