@@ -9,8 +9,7 @@ Application::Application() :
 void Application::tryToLogin(const QString &password) {
     if(data.isValid(password.toStdString())) {
         login.close();
-        mainWindow.setThemesList(data.getThemesList(password.toStdString()));
-        mainWindow.show();
+        mainWindow.loginAndShow(password.toStdString());
         cout << "Logined" << endl;
     }
 }

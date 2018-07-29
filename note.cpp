@@ -9,6 +9,10 @@ Note::Note(string fileName) {
     }
 }
 
+void Note::setText(string text) {
+    this->text = text;
+}
+
 void Note::init(string name, string text, string date, uint32_t textCheckSum, uint32_t nameCheckSum) {
     this->name = name;
     this->text = text;

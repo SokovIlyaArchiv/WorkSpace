@@ -22,6 +22,15 @@ void Theme::init(string name, string date, uint32_t nameCheckSum, uint32_t notes
     this->notesCheckSum = notesCheckSum;
 }
 
+void Theme::removeNote(string noteName) {
+    for(auto e = notes.begin(); e != notes.end(); e++) {
+        if((*e).getName("") == noteName) {
+            notes.erase(e);
+            return;
+        }
+    }
+}
+
 string Theme::getName(string password) const {
     if(isValid(name, password)) {
         return decode(name, password);
@@ -55,21 +64,21 @@ string Theme::decode(string text, string password) const {
 }
 
 
-bool Theme::addNote(Note note) {
+void Theme::addNote(Note note) {
     for(auto existNote : notes) {
         if(existNote.getName("") == note.getName("")) {
-            return false;
+            return;
         }
     }
     notes.push_back(note);
-    return  true;
 }
 
-Note Theme::getNote(string name) const {
+Note& Theme::getNote(string name) {
     for(auto& existNote : notes) {
         if(existNote.getName("") == name) {
             return existNote;
         }
     }
-    return Note();
+    cout << "Note not found" << endl;
+    return defaultNote;
 }

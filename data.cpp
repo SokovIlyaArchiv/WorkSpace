@@ -18,7 +18,15 @@ Data::Data(string settingsFileName) {
 
 void Data::addTheme(Theme theme) {
     themes.push_back(theme);
-    themesFileNames.push_back(theme.getName(""));
+}
+
+void Data::removeTheme(string themeName) {
+    for(auto e = themes.begin(); e != themes.end(); e++) {
+        if((*e).getName("") == themeName) {
+            themes.erase(e);
+            return;
+        }
+    }
 }
 
 bool Data::isValid(string password) const {
@@ -42,7 +50,7 @@ void Data::readTheme(const string &themeName) {
     themes.push_back(Theme(themeName));
 }
 
-const vector<string> Data::getThemesList(string password) const {
+vector<string> Data::getThemesList(string password) const {
     if(isValid(password)) {
         vector<string> answer;
         for(auto theme : themes) {
@@ -50,16 +58,17 @@ const vector<string> Data::getThemesList(string password) const {
         }
         return answer;
     } else {
+        cout << "Incorrect password" << endl;
         return {};
     }
 }
 
 Theme& Data::getTheme(const string &name) {
-    for(auto& theme : themes) {
-        if(theme.getName("") == name) {
-            return theme;
+    for(size_t c = 0; c < themes.size(); c++) {
+        if(themes[c].getName("") == name) {
+            return themes[c];
         }
     }
     cerr << "Theme not found: " << name << endl;
-    return emptyTheme;
+    return defaultTheme;
 }

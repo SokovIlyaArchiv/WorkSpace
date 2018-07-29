@@ -8,6 +8,7 @@ public:
     Note() = default;
     Note(string fileName);
     void init(string name, string text, string date, unsigned textCheckSum = 0, unsigned nameCheckSum = 0);
+    void setText(string text);
     string getName(string password) const;
     string getText(string password) const;
     string getDate() const;

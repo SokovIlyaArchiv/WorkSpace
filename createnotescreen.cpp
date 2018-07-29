@@ -1,6 +1,6 @@
 #include "createnotescreen.h"
 
-createNoteScreen::createNoteScreen(QWidget *parent)
+CreateNoteScreen::CreateNoteScreen(QWidget *parent)
     : CreateThemeScreen (parent) {
     CreateThemeScreen::vLayout->removeWidget(CreateThemeScreen::createButton);
     CreateThemeScreen::createButton->deleteLater();

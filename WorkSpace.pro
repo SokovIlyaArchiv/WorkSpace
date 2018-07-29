@@ -31,7 +31,8 @@ SOURCES += \
     note.cpp \
     login.cpp \
     createthemescreen.cpp \
-    createnotescreen.cpp
+    createnotescreen.cpp \
+    noteeditor.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     note.h \
     login.h \
     createthemescreen.h \
-    createnotescreen.h
+    createnotescreen.h \
+    noteeditor.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

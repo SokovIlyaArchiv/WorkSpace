@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "noteeditor.h"
 #include "createnotescreen.h"
 #include "data.h"
 
@@ -12,7 +13,7 @@ class MainWindow : public QWidget {
 
 public:
     MainWindow(Data& data, QWidget *parent = nullptr);
-    void setThemesList(vector<string> themesList);
+    void loginAndShow(string password);
     ~MainWindow();
 private slots:
     void addTheme(Theme theme);
@@ -22,18 +23,20 @@ private:
     void updateUI();
     void toThemeState(string Theme);
     void toMainWindowState();
-    void recreateButtons(vector<string>& buttonsNames);
-    void removeFromVector(string element, vector<string>& elementVector);
+    void recreateButtons(vector<string> buttonsNames);
+
+    string password;
     bool isRemoveState, isThemeState;
+
     QVBoxLayout* layout;
     QHBoxLayout* hLayout;
     QPushButton *exit, *add, *remove;
     vector<QPushButton*> buttons;
 
-    vector<string> themesNamesList,
-                   notesNamesList;
     Data& data;
-    Theme &theme, defaultTheme;
+    string themeName, noteName;
+
     CreateThemeScreen createThemeScreen;
-    createNoteScreen createNoteScreen;
+    CreateNoteScreen createNoteScreen;
+    NoteEditor noteEditor;
 };

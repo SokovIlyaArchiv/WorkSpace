@@ -3,10 +3,10 @@
 #include "createthemescreen.h"
 #include "note.h"
 
-class createNoteScreen : public CreateThemeScreen {
+class CreateNoteScreen : public CreateThemeScreen {
 Q_OBJECT
 public:
-    createNoteScreen(QWidget* parent = nullptr);
+    CreateNoteScreen(QWidget* parent = nullptr);
 signals:
     void createNote(Note note);
 private:

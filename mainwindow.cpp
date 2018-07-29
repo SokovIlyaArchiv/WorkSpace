@@ -2,7 +2,7 @@
 
 MainWindow::MainWindow(Data& data, QWidget *parent)
     : QWidget(parent), isRemoveState(false), isThemeState(false),
-      data(data), theme(defaultTheme) {
+      data(data) {
     layout = new QVBoxLayout(this);
     hLayout = new QHBoxLayout(layout->widget());
     exit = new QPushButton("Exit", this);
@@ -21,13 +21,17 @@ MainWindow::MainWindow(Data& data, QWidget *parent)
         isRemoveState = !isRemoveState;
     });
     connect(&createThemeScreen, &CreateThemeScreen::createTheme, this, &MainWindow::addTheme);
-    connect(&createNoteScreen, &createNoteScreen::createNote, this, &MainWindow::addNote);
-    toMainWindowState();
+    connect(&createNoteScreen, &CreateNoteScreen::createNote, this, &MainWindow::addNote);
+    connect(&noteEditor, &NoteEditor::changeNote, [=](string text) {
+        this->data.getTheme(themeName).getNote(noteName).setText(text);
+        cout << text << endl;
+    });
 }
 
-void MainWindow::setThemesList(vector<string> themesList) {
-    this->themesNamesList = themesList;
-    updateUI();
+void MainWindow::loginAndShow(string password) {
+    this->password = password;
+    toMainWindowState();
+    show();
 }
 
 void MainWindow::buttonPushed() {
@@ -36,37 +40,38 @@ void MainWindow::buttonPushed() {
             if(*button == sender) {
                 if(isRemoveState) {
                     auto remBntName = (*button)->text().toStdString();
-                    removeFromVector(remBntName, (isThemeState)? notesNamesList : themesNamesList);
-                    updateUI();
+                    if(isThemeState) {
+                        data.getTheme(themeName).removeNote(remBntName);
+                    } else {
+                        data.removeTheme(remBntName);
+                    }
                     isRemoveState = false;
                     remove->setText("Remove");
+                    recreateButtons((isThemeState)? data.getTheme(themeName).getNotesNames(password)
+                                                  : data.getThemesList(password));
                     return;
                 } else {
                     if(!isThemeState) {
                         toThemeState((*button)->text().toStdString());
                         return;
                     } else {
-                        cout << "Opening: " << (*button)->text().toStdString() << endl;
+                        this->noteName = (*button)->text().toStdString();
+                        noteEditor.openNote(data.getTheme(themeName).getNote(noteName), password);
                     }
                 }
             }
         }
 }
 
-void MainWindow::updateUI() {
-    recreateButtons((isThemeState)? notesNamesList : themesNamesList);
-}
-
 void MainWindow::toThemeState(string themeName) {
-    theme = data.getTheme(themeName);
-    notesNamesList = theme.getNotesNames(""); //password
+    this->themeName = themeName;
     exit->setText("Back");
     disconnect(exit, &QPushButton::clicked, this, &QWidget::close);
     disconnect(add, &QPushButton::clicked, &createThemeScreen, &QWidget::show);
     connect(exit, &QPushButton::clicked, this, &MainWindow::toMainWindowState);
     connect(add, &QPushButton::clicked, &createNoteScreen, &QWidget::show);
     isThemeState = true;
-    updateUI();
+    recreateButtons(data.getTheme(themeName).getNotesNames(password));
 }
 
 void MainWindow::toMainWindowState() {
@@ -78,10 +83,10 @@ void MainWindow::toMainWindowState() {
     connect(exit, &QPushButton::clicked, this, &QWidget::close);
     connect(add, &QPushButton::clicked, &createThemeScreen, &QWidget::show);
     exit->setText("Exit");
-    updateUI();
+    recreateButtons(data.getThemesList(password));
 }
 
-void MainWindow::recreateButtons(vector<string> &buttonsNames) {
+void MainWindow::recreateButtons(vector<string> buttonsNames) {
     for(auto& button : buttons) {
         layout->removeWidget(button);
         button->deleteLater();
@@ -96,40 +101,33 @@ void MainWindow::recreateButtons(vector<string> &buttonsNames) {
     }
 }
 
-void MainWindow::removeFromVector(string element, vector<string> &elementVector) {
-    for(auto e = elementVector.begin(); e != elementVector.end(); e++) {
-        if(*e == element) {
-            elementVector.erase(e);
-            return;
-        }
-    }
-}
-
-
 MainWindow::~MainWindow() {
 }
 
 void MainWindow::addTheme(Theme theme) {
-    auto themeName = theme.getName("");
-    for(auto& name : themesNamesList) { //All themes have unique name
+    auto themeName = theme.getName(password);
+    for(auto& name : data.getThemesList(password)) { //All themes have unique name
         if(name == themeName) {
+            cerr  << "It's not unique name for theme" << endl;
             return;
         }
     }
-    themesNamesList.push_back(theme.getName(""));
-    updateUI();
     data.addTheme(theme);
+    recreateButtons(data.getThemesList(password));
+    createThemeScreen.close();
     //Save to file...
 }
 
 void MainWindow::addNote(Note note) {
-    auto noteName = note.getName("");
-    for(auto& name : theme.getNotesNames("")) { //All themes have unique name
+    auto noteName = note.getName(password);
+    for(auto& name : data.getTheme(themeName).getNotesNames(password)) { //All themes have unique name
         if(name == noteName) {
+            cerr  << "It's not unique name for note" << endl;
             return;
         }
     }
-    notesNamesList.push_back(note.getName(""));
-    theme.addNote(note);
-    updateUI();
+    data.getTheme(themeName).addNote(note);
+    recreateButtons(data.getTheme(themeName).getNotesNames(password));
+    createNoteScreen.close();
+    //Save to file
 }
